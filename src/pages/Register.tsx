@@ -4,11 +4,12 @@ import { useNavigate } from "react-router";
 import {  createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config"
+import type { RegisterPage } from "@/types/Typescript";
 
 
 function Register() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterPage>({
     Fname: "",
     Lname: "",
     Email: "",
@@ -17,11 +18,11 @@ function Register() {
     role: "",
   });
 
-  const ChangeV = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const ChangeV = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name as string]: e.target.value });
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
    
@@ -87,7 +88,7 @@ await setDoc(doc(db, "users", user.uid), {
                   onChange={ChangeV}
                   pattern="[A-Za-z]+"
                   title="Only letters allowed"
-                  className="p-2 border-2 rounded block w-full sm:text-sm "
+                  className="p-2 border-2 rounded block w-full sm:text-sm  bg-white"
                 />
                 <input
                   type="text"
@@ -97,7 +98,7 @@ await setDoc(doc(db, "users", user.uid), {
                   onChange={ChangeV}
                   pattern="[A-Za-z]+"
                   title="Only letters allowed"
-                  className="p-2 border-2 rounded block w-full sm:text-sm"
+                  className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
                 />
               </div>
               <input
@@ -106,7 +107,7 @@ await setDoc(doc(db, "users", user.uid), {
                 placeholder="Email"
                 value={formData.Email}
                 onChange={ChangeV}
-                className="p-2 border-2 rounded block w-full"
+                className="p-2 border-2 rounded  bg-white block w-full"
               />
               <input
                 type="password"
@@ -116,7 +117,7 @@ await setDoc(doc(db, "users", user.uid), {
                 onChange={ChangeV}
                 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                 title="Must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
-                className="p-2 border-2 rounded block  w-full"
+                className="p-2 border-2 rounded block  bg-white w-full"
               />
               <input
                 type="password"
@@ -126,7 +127,7 @@ await setDoc(doc(db, "users", user.uid), {
                 onChange={ChangeV}
                 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                 title="Must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
-                className="p-2 border-2 rounded block  w-full"
+                className="p-2 border-2 rounded block  bg-white w-full"
               />
             </div>
 
@@ -157,14 +158,14 @@ await setDoc(doc(db, "users", user.uid), {
 
             <button
               type="submit"
-              className="bg-blue-600 text-white py-3 px-6 rounded hover:bg-blue-400 "
+              className=" text-white  py-3 px-6 rounded bg-gradient-to-r from-cyan-600 via-black hover:cursor-pointer hover:bg-gray-300 "
             >
               Register
             </button>
           </form>
-          <p className="mt-4 text-center">
+          <p className="mt-4 text-center text-gray-300">
             Already have an account?
-            <Link to="/login" className="text-blue-600 hover:underline  ml-1">
+            <Link to="/login" className="text-white hover:underline  ml-1">
               Login
             </Link>
           </p>
