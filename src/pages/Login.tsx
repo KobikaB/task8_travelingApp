@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
-import type { FormData } from "../types/Typescript";
+import type { FormData, UserRole } from "../types/Typescript";
 
 import { toast, ToastContainer } from "react-toastify";
 
@@ -21,7 +21,7 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRole = (role: string) => {
+  const handleRole = (role : UserRole) => {
     if (role === "passenger") {
       navigate("/phome");
     } else {
@@ -29,7 +29,7 @@ function Login() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.role) {

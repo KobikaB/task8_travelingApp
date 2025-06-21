@@ -1,9 +1,9 @@
 export interface  FormData{
 Email:string,
     Password: string,
-    role: string,
+    role: UserRole,
 }
- 
+ export type UserRole = "passenger" | "vowner" | "";
 
 export interface Tconfig{
 
