@@ -1,11 +1,11 @@
 import { Link } from "react-router";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import {  createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config"
+import { auth, db } from "../firebase/config";
 import type { RegisterPage } from "@/types/Typescript";
-
+import { toast, ToastContainer } from "react-toastify";
 
 function Register() {
   const navigate = useNavigate();
@@ -18,21 +18,21 @@ function Register() {
     role: "",
   });
 
-  const ChangeV = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const ChangeV = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.name as string]: e.target.value });
   };
 
-  const handleRegister = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-   
-
     if (formData.Password !== formData.ConfirmPassword) {
-      console.log("Password not match");
+      toast.error("Password not match");
       return;
     }
-
- 
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -42,19 +42,25 @@ function Register() {
       );
 
       const user = userCredential.user;
-await setDoc(doc(db, "users", user.uid), {
-    Fname: formData.Fname,
-    Lname: formData.Lname,
-    Email: formData.Email,
-    role: formData.role,
-   
-  });
+      const collectionName = formData.role === "passenger" ? "passengers" :  "vowners";
+      
 
+      await setDoc(doc(db,collectionName , user.uid), {
+        userid: user.uid,
+        Fname: formData.Fname,
+        Lname: formData.Lname,
+        Email: formData.Email,
+        
+      });
 
-      console.log("User successfully registered and data saved!");
+      toast.success("User successfully registered and data saved!");
       navigate("/login");
-    } catch (error) {
-      console.error("Registration error:", error);
+    } catch (error: any) {
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("This email is already registered. Please login.");
+      } else {
+        toast.error("Registration failed. Please try again.");
+      }
     }
   };
 
@@ -176,6 +182,8 @@ await setDoc(doc(db, "users", user.uid), {
         className="hidden md:block md:w-1/2 bg-cover bg-center object-cover"
         style={{ backgroundImage: "url('./src/Images/carpic.avif')" }}
       ></div>
+
+      <ToastContainer />
     </div>
   );
 }
