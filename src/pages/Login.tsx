@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
@@ -21,7 +21,7 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRole = (role : UserRole) => {
+  const handleRole = (role: UserRole) => {
     if (role === "passenger") {
       navigate("/phome");
     } else {
@@ -29,7 +29,7 @@ function Login() {
     }
   };
 
-  const handleSubmit = async (e:React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.role) {
@@ -37,15 +37,22 @@ function Login() {
       return;
     }
 
+    const collectionName = formData.role === "passenger" ? "passengers" :  "vowners";
+
     signInWithEmailAndPassword(auth, formData.Email, formData.Password)
-      .then((res) => getDoc(doc(db, "users", res.user.uid)))
+      .then((res) => getDoc(doc(db,collectionName , res.user.uid)))
       .then((docSnap) => {
         if (!docSnap.exists()) return toast.error("User not found");
-        const role = docSnap.data().role;
-        if (role !== formData.role) {
-          return toast.error("Role mismatch");
-        }
-        handleRole(role);
+
+        
+        const role = formData.role === "passenger" ? "passenger" :  "vowner";
+        
+
+        toast.success("Login successful!");
+
+        setTimeout(() => {
+          handleRole(role);
+        }, 2000);
       })
       .catch((error) => toast.error("Login failed: " + error.message));
   };
@@ -138,6 +145,12 @@ function Login() {
               Login
             </button>
           </form>
+          <p className="text-center text-sm mt-4">
+            If you don't have an account?
+            <Link to="/register" className="text-blue-600 hover:underline ml-1">
+              Register
+            </Link>
+          </p>
         </div>
       </div>
 
