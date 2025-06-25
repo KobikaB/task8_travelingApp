@@ -23,3 +23,16 @@ export interface RegisterPage {
   ConfirmPassword: string;
   role: string;
 }
+
+
+export interface Booking {
+  id: string;
+  pickupLocation: string;
+  dropLocation: string;
+  pickupDate: string;
+  pickupTime: string;
+  numberofPassengers: number;
+  vehicleId: string;
+}
+
+

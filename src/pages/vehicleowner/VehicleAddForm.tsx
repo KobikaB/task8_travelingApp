@@ -4,6 +4,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
+
 function VehicleAddForm() {
   const [formData, setFormData] = useState({
     model: "",
@@ -43,7 +44,9 @@ function VehicleAddForm() {
         ownerEmail: user.email,
       });
       toast.success("Vehicle added successfully!");
-      navigate("/vhome");
+      setTimeout(() => {
+        navigate("/vhome");
+      }, 2000);
     } catch (error) {
       console.error("Error adding vehicle:", error);
       toast.error("Failed to add vehicle.");

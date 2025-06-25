@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth, db } from "@/firebase/config";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import type { Booking } from "@/types/Typescript";
 
 function PassengerForm() {
   const { vehicleId } = useParams();
   const navigate = useNavigate();
+   const [vehicleInfo, setVehicleInfo] = useState(null);
 
   const [formData, setFormData] = useState({
     pickupLocation: "",
@@ -15,6 +17,29 @@ function PassengerForm() {
     pickupTime: "",
     numberofPassengers: 1,
   });
+
+
+  useEffect(() => {
+    const fetchVehicleDetails = async () => {
+      if (!vehicleId) return;
+
+      try {
+        const docRef = doc(db, "vehicles", vehicleId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setVehicleInfo(docSnap.data());
+        } else {
+          toast.error("Vehicle not found");
+        }
+      } catch (error) {
+        console.error("Error fetching vehicle:", error);
+        toast.error("Failed to load vehicle data");
+      }
+    };
+
+    fetchVehicleDetails(); 
+}, [vehicleId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,14 +60,15 @@ function PassengerForm() {
     try {
       await addDoc(collection(db, "bookings"), {
         ...formData,
-        vehicleId: vehicleId,
+        vehicleId,
         passengerId: user.uid,
-        passengerName:user.displayName,
+       
         pickupLocation: formData.pickupLocation,
         dropLocation: formData.dropLocation,
         pickupDate: formData.pickupDate,
         pickupTime: formData.pickupTime,
         numberofPassengers: Number(formData.numberofPassengers),
+        passengerName: user.displayName || "",
        
       });
 
@@ -116,13 +142,7 @@ function PassengerForm() {
   required
   className="w-full border p-2 rounded"
 />
-
-
-
-
-    </form>
-
-   <div className="flex justify-center mt-5">
+  <div className="flex justify-center mt-5">
   <button
             type="submit"
             className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded  "
@@ -131,8 +151,14 @@ function PassengerForm() {
           </button>
    </div>
         
-   </div>
 
+
+
+    </form>
+
+   
+   </div>
+<ToastContainer />
 
   </div>
 )}

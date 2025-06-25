@@ -3,9 +3,14 @@ import HomeI from "@/images/Homebg5.jpg";
 import homepageI1 from "@/images/homepageI1.jpeg";
 import { auth, db } from "@/firebase/config";
 import { doc, getDoc } from "firebase/firestore";
+import {  useNavigate } from "react-router";
+import { Button } from "@/components/ui/button";
+
+import Ptable from "./Ptable";
 
 function PassengerHome() {
   const [fname, setFname] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -39,6 +44,20 @@ function PassengerHome() {
           hop in, let's go! begin your trip! discover new destinations! <br />
           your ride, your way!
         </h1>
+
+        <Button
+          variant="outline"
+          className="text-2xl hover:cursor-pointer m-5 text-white bg-indigo-800/60 p-8 w-auto hover:bg-indigo-700"
+       onClick={() => navigate("/allvehicle")} 
+         
+        >
+          add Booking more
+        </Button>
+
+
+        <div className=" w-full max-h-[400px] overflow-x-auto ">
+          <Ptable />
+        </div>
 
         <img
           src={homepageI1}
