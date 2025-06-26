@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { db, auth } from "../../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
-
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import type { vehicleFormData } from "@/types/Typescript";
 
 function VehicleAddForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<vehicleFormData>({
     model: "",
-    seats: "",
+    seats:1,
     type: "",
     licensePlate: "",
-    fees: "",
+    fees: 0,
     available: false,
   });
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (
@@ -27,26 +28,58 @@ function VehicleAddForm() {
     });
   };
 
+  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "vehicles");
+    formData.append("folder", "vehicleImages");
+
+    const res = await axios.post(
+      "https://api.cloudinary.com/v1_1/dq5buemig/image/upload",
+      formData
+    );
+
+    return res.data.secure_url;
+
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const user = auth.currentUser;
     if (!user) {
       toast.error("User not logged in!");
       return;
     }
 
+    if (!imageFile) {
+      toast.error("Please select an image.");
+      return;
+    }
+
     try {
+      const imageUrl = await uploadImageToCloudinary(imageFile);
+
       await addDoc(collection(db, "vehicles"), {
-        ...formData,
-        seats: Number(formData.seats),
-        fees: Number(formData.fees),
+        model: formData.model,
+        seats: formData.seats,
+        type: formData.type,
+        licensePlate: formData.licensePlate,
+        fees: formData.fees,
+        available: formData.available,
+        images: [imageUrl],
         ownerId: user.uid,
         ownerEmail: user.email,
+        createdAt: new Date(),
       });
+
       toast.success("Vehicle added successfully!");
+
       setTimeout(() => {
         navigate("/vhome");
       }, 2000);
+
+
     } catch (error) {
       console.error("Error adding vehicle:", error);
       toast.error("Failed to add vehicle.");
@@ -54,11 +87,12 @@ function VehicleAddForm() {
   };
 
   return (
-    <div className=" min-h-screen w-full flex items-center justify-center bg-cyan-800 px-4">
-      <div className=" w-full bg-white  shadow-md rounded max-w-xl h-auto p-6 ">
-        <h2 className="text-2xl mt-4 text-center text-indigo-700/50">
+    <div className="min-h-screen w-full flex items-center justify-center bg-cyan-800 px-4">
+      <div className="w-full bg-white shadow-md rounded max-w-xl h-auto p-6">
+        <h2 className="text-2xl mt-4 mb-6 text-center text-indigo-700/50">
           Add New Vehicle
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -69,6 +103,7 @@ function VehicleAddForm() {
             className="w-full border p-2 rounded block"
             required
           />
+
           <input
             type="number"
             name="seats"
@@ -77,7 +112,9 @@ function VehicleAddForm() {
             onChange={handleChange}
             className="w-full border p-2 rounded block"
             required
+            
           />
+
           <input
             type="text"
             name="type"
@@ -87,6 +124,7 @@ function VehicleAddForm() {
             className="w-full border p-2 rounded block"
             required
           />
+
           <input
             type="text"
             name="licensePlate"
@@ -96,6 +134,7 @@ function VehicleAddForm() {
             className="w-full border p-2 rounded block"
             required
           />
+
           <input
             type="number"
             name="fees"
@@ -104,7 +143,9 @@ function VehicleAddForm() {
             onChange={handleChange}
             className="w-full border p-2 rounded block"
             required
+            min={0}
           />
+
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -114,14 +155,32 @@ function VehicleAddForm() {
             />
             Available
           </label>
-          <button
-            type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded w-full"
-          >
-            Add Vehicle
-          </button>
+
+          <div>
+            <label className="block mb-1">Upload Vehicle Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="bg-gray-300 hover:cursor-pointer hover:bg-gray-500 p-3 w-55 "
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setImageFile(e.target.files[0]);
+                }
+              }}
+              required
+            />
+          </div>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded "
+            >
+              Add Vehicle
+            </button>
+          </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }
