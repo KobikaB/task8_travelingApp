@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HomeI from "@/images/Homebg5.jpg";
-import homepageI1 from "@/images/homepageI1.jpeg";
+// import homepageI1 from "@/images/homepageI1.jpeg";
 import { auth, db } from "@/firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import {  useNavigate } from "react-router";
@@ -37,7 +37,7 @@ function PassengerHome() {
         className="min-w-full min-h-full object-cover"
       />
       <div className="absolute inset-0 flex items-center justify-center text-ce flex-col px-4">
-        <h1 className=" text-white text-2xl  md:text-3xl font-extrabold mb-4 text-center bg-blue-500 p-4 rounded-2xl bg-gradient-to-l from-cyan-400 via-cyan-600 mt-20 ">
+        <h1 className=" text-white text-2xl  md:text-3xl font-extrabold mb-4 text-center bg-blue-500 p-4 rounded-2xl bg-gradient-to-l from-cyan-400 via-cyan-600 mt-40 ">
           <span className="text-blue-900">welcome to {fname}!</span> <br />
           abroad let's get moving! adventure starts here! <br />
           your journey awaits! ready to explore? travel made easy! <br />
@@ -51,7 +51,7 @@ function PassengerHome() {
        onClick={() => navigate("/allvehicle")} 
          
         >
-          add Booking more
+          add Booking 
         </Button>
 
 
@@ -59,11 +59,11 @@ function PassengerHome() {
           <Ptable />
         </div>
 
-        <img
+        {/* <img
           src={homepageI1}
           alt="logo"
           className="h-12 sm:h-13 md:h-50 lg:h-60  bg-amber-200   "
-        />
+        /> */}
       </div>
     </div>
   );

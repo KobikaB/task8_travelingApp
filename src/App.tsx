@@ -16,6 +16,8 @@ import NotFound from "./pages/NotFound";
 import PassengerForm from "./pages/passengerhome/PassengerForm";
 import AllavailableVehicle from "./pages/passengerhome/AllavailableVehicle";
 
+
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -37,6 +39,7 @@ function App() {
          <Route path="*" element={<NotFound />} />
 
           <Route path="allvehicle" element={<AllavailableVehicle />} />
+          
       </>
     )
   );

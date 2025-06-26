@@ -3,12 +3,15 @@ import { auth, db } from "@/firebase/config";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
-import type { Booking } from "@/types/Typescript";
+import type { PassengerFormData } from "@/types/Typescript";
+
+
+
 
 function PassengerForm() {
   const { vehicleId } = useParams();
   const navigate = useNavigate();
-   const [vehicleInfo, setVehicleInfo] = useState(null);
+  const [vehicleInfo, setVehicleInfo] = useState<PassengerFormData | null>(null);
 
   const [formData, setFormData] = useState({
     pickupLocation: "",
@@ -17,7 +20,6 @@ function PassengerForm() {
     pickupTime: "",
     numberofPassengers: 1,
   });
-
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -28,7 +30,7 @@ function PassengerForm() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setVehicleInfo(docSnap.data());
+          setVehicleInfo(docSnap.data() as PassengerFormData);
         } else {
           toast.error("Vehicle not found");
         }
@@ -38,8 +40,8 @@ function PassengerForm() {
       }
     };
 
-    fetchVehicleDetails(); 
-}, [vehicleId]);
+    fetchVehicleDetails();
+  }, [vehicleId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,14 +64,13 @@ function PassengerForm() {
         ...formData,
         vehicleId,
         passengerId: user.uid,
-       
+
         pickupLocation: formData.pickupLocation,
         dropLocation: formData.dropLocation,
         pickupDate: formData.pickupDate,
         pickupTime: formData.pickupTime,
         numberofPassengers: Number(formData.numberofPassengers),
-        passengerName: user.displayName || "",
-       
+        passengerName: user.displayName ,
       });
 
       toast.success("Successfully Book");
@@ -82,85 +83,86 @@ function PassengerForm() {
   };
 
   return (
-  <div className="min-h-screen w-full flex items-center justify-center bg-cyan-600 px-4">
-   <div className="w-full max-w-xl bg-white rounded shadow-md h-auto p-6 ">
+    <div className="min-h-screen w-full flex items-center justify-center bg-cyan-600 px-4 mt-20">
+      <div className="w-full max-w-xl bg-white rounded shadow-md h-auto p-6 ">
+        <h2 className="text-2xl mb-4 text-center text-indigo-900">
+          Add New Bookings
+        </h2>
 
-    <h2 className="text-2xl mb-4 text-center text-indigo-900">
-        Add New Bookings
-    </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {vehicleInfo && (
+            <div className="bg-blue-400 p-4 rounded mb-4 text-center">
+             
+              <p>
+                <strong>Seats:</strong> {vehicleInfo.seats}
+              </p>
+              <p>
+                <strong>Fees:</strong> Rs. {vehicleInfo.fees}
+              </p>
+            </div>
+          )}
 
+          <input
+            type="text"
+            name="pickupLocation"
+            placeholder="Pickup Location"
+            value={formData.pickupLocation}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded"
+          />
 
-    <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="dropLocation"
+            placeholder="drop Location"
+            value={formData.dropLocation}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded"
+          />
 
- 
-<input
-  type="text"
-  name="pickupLocation"
-  placeholder="Pickup Location"
-  value={formData.pickupLocation}
-  onChange={handleChange}
-  required
-  className="w-full border p-2 rounded"
-/>
+          <input
+            type="date"
+            name="pickupDate"
+            value={formData.pickupDate}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded"
+          />
 
-<input
-  type="text"
-  name="dropLocation"
-  placeholder="drop Location"
-  value={formData.dropLocation}
-  onChange={handleChange}
-  required
-  className="w-full border p-2 rounded"
-/>
+          <input
+            type="time"
+            name="pickupTime"
+            value={formData.pickupTime}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded"
+          />
 
-
-<input
-  type="date"
-  name="pickupDate"
-  value={formData.pickupDate}
-  onChange={handleChange}
-  required
-  className="w-full border p-2 rounded"
-/>
-
-
-<input
-  type="time"
-  name="pickupTime"
-  value={formData.pickupTime}
-  onChange={handleChange}
-  required
-  className="w-full border p-2 rounded"
-/>
-
-<input
-  type="number"
-  name="numberofPassengers"
-  min={1}
-  value={formData.numberofPassengers}
-  onChange={handleChange}
-  required
-  className="w-full border p-2 rounded"
-/>
-  <div className="flex justify-center mt-5">
-  <button
-            type="submit"
-            className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded  "
-          >
-            Add Booking
-          </button>
-   </div>
-        
-
-
-
-    </form>
-
-   
-   </div>
-<ToastContainer />
-
-  </div>
-)}
+          <input
+            type="number"
+            name="numberofPassengers"
+             placeholder="Number Of Passengers"
+            
+            value={formData.numberofPassengers}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded"
+          />
+          <div className="flex justify-center mt-5">
+            <button
+              type="submit"
+              className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded  "
+            >
+              Add Booking
+            </button>
+          </div>
+        </form>
+      </div>
+      <ToastContainer />
+    </div>
+  );
+}
 
 export default PassengerForm;

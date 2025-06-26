@@ -23,7 +23,10 @@ const Navbar = () => {
         <ul>
           
              <div className='flex gap-8 '>
-                 <Button variant="outline" className='text-sm hover:cursor-pointer bg-black/60 text-white' >Profile</Button>
+                 <Button variant="outline" className='text-sm hover:cursor-pointer bg-black/60 text-white'
+               
+                 
+                 >Profile</Button>
                  <Button variant="outline" className='text-sm hover:cursor-pointer bg-black/60 text-white'
                  onClick={() => navigate("/login",  { replace: true })}
                  >Logout</Button>

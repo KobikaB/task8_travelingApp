@@ -4,6 +4,8 @@ import { db, auth } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import type { Booking } from "@/types/Typescript";
 
+
+
 function Ptable() {
   const [bookings, setBookings] = useState<Booking[]>([]);
 
@@ -34,7 +36,7 @@ function Ptable() {
       <table className="min-w-[900px] w-full border border-black">
         <thead className="bg-gray-200">
           <tr className="text-left border border-black">
-            <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">Id</th>
             <th className="px-4 py-2">Pickup Location</th>
             <th className="px-4 py-2">Drop Location</th>
             <th className="px-4 py-2">Pickup Date</th>

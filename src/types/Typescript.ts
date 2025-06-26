@@ -36,3 +36,24 @@ export interface Booking {
 }
 
 
+
+export interface  PassengerFormData {
+  name: string;
+  fees: number;
+  seats: number;
+  available: boolean;
+  images: string[];
+}
+
+
+export interface vehicleFormData {
+  model:string,
+  seats:number,
+  type:string,
+  licensePlate:string,
+  fees:number,
+  available:false
+
+}
+
+
