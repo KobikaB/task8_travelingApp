@@ -38,21 +38,23 @@ function VehicleOwnerHome() {
           <br />
           Start managing, stay in control, and drive success forward!
         </h1>
-        <Button
+        {/* <Button
           variant="outline"
           className="text-2xl hover:cursor-pointer m-5 text-white bg-indigo-800/60 p-8 w-auto hover:bg-indigo-700"
           onClick={() => navigate("/allvehicle")}
         >
           View More Details
-        </Button>
-        <div>
+        </Button> */}
+       
+        <div className="flex justify-end">
           <button
             onClick={() => navigate("/addvehicle")}
-            className="bg-black/40 text-white rounded hover:bg-black "
+            className="bg-gray-400 text-white text-xl rounded hover:bg-black p-4 mt-10 "
           >
             Add Vehicle
           </button>
         </div>
+       
 
         <div className=" w-full max-h-[400px] overflow-x-auto ">
           <Vtable />
