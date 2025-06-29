@@ -6,25 +6,29 @@ import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
 import type { RegisterPage } from "@/types/Typescript";
 import { toast, ToastContainer } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 function Register() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<RegisterPage>({
     Fname: "",
     Lname: "",
     Email: "",
     Password: "",
     ConfirmPassword: "",
-    role: "",
+    role: "passenger",
   });
 
-  const ChangeV = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    setFormData({ ...formData, [e.target.name as string]: e.target.value });
+  const viewPassword = () => {
+    setShowPassword((prev) => !prev);
   };
+
+ const ChangeV = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const { name, value } = e.target;
+     setFormData((prev) => ({ ...prev, [name]: value }));
+   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,15 +46,15 @@ function Register() {
       );
 
       const user = userCredential.user;
-      const collectionName = formData.role === "passenger" ? "passengers" :  "vowners";
-      
+      const collectionName =
+        formData.role === "passenger" ? "passengers" : "vowners";
 
-      await setDoc(doc(db,collectionName , user.uid), {
+      await setDoc(doc(db, collectionName, user.uid), {
         userid: user.uid,
         Fname: formData.Fname,
         Lname: formData.Lname,
         Email: formData.Email,
-        
+        role: formData.role,
       });
 
       toast.success("User successfully registered and data saved!");
@@ -115,26 +119,44 @@ function Register() {
                 onChange={ChangeV}
                 className="p-2 border-2 rounded  bg-white block w-full"
               />
-              <input
-                type="password"
-                name="Password"
-                placeholder="Password"
-                value={formData.Password}
-                onChange={ChangeV}
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                title="Must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
-                className="p-2 border-2 rounded block  bg-white w-full"
-              />
-              <input
-                type="password"
-                name="ConfirmPassword"
-                placeholder="Confirm Password"
-                value={formData.ConfirmPassword}
-                onChange={ChangeV}
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                title="Must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
-                className="p-2 border-2 rounded block  bg-white w-full"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="Password"
+                  placeholder="Password"
+                  value={formData.Password}
+                  onChange={ChangeV}
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                  title="Must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
+                  className="p-2 border-2 rounded block  bg-white w-full"
+                />
+                <button
+                  type="button"
+                  onClick={viewPassword}
+                  className="absolute top-1/4 right-3 text-gray-400"
+                >
+                  <FontAwesomeIcon icon={showPassword ?faEyeSlash: faEye} />
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="ConfirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.ConfirmPassword}
+                  onChange={ChangeV}
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                  title="Must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
+                  className="p-2 border-2 rounded block  bg-white w-full"
+                />
+                <button
+                  type="button"
+                  onClick={viewPassword}
+                  className="absolute top-1/4 right-3 text-gray-400"
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash: faEye} />
+                </button>
+              </div>
             </div>
 
             <div className="flex items-center space-x-4 gap-6 my-4  text-white">
