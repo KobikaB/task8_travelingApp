@@ -2,10 +2,15 @@ import React from "react";
 import { useNavigate } from "react-router";
 import logo1 from "../images/travelLogo.jpeg";
 import { Button } from "@/components/ui/button";
-import { ToastContainer } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    navigate("/login");
+  };
 
   return (
     <div className=" bg-gradient-to-r from-cyan-400/50 via-blue-900 h-20 fixed top-0 w-screen z-50 ">
@@ -21,20 +26,22 @@ const Navbar = () => {
             <Button
               variant="outline"
               className="text-sm hover:cursor-pointer bg-black/60 text-white"
+              onClick={() => {
+                navigate("/profile");
+              }}
             >
               Profile
             </Button>
             <Button
               variant="outline"
               className="text-sm hover:cursor-pointer bg-black/60 text-white"
-              onClick={() => navigate("/login", { replace: true })}
+              onClick={handleLogout}
             >
               Logout
             </Button>
           </div>
         </ul>
       </div>
-      <ToastContainer />
     </div>
   );
 };

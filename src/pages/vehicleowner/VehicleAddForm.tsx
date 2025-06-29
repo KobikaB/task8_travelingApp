@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { db, auth } from "../../firebase/config";
+import { db } from "../../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
-import { toast, ToastContainer } from "react-toastify";
+
 import axios from "axios";
 import type { vehicleFormData } from "@/types/Typescript";
+import { toast, ToastContainer } from "react-toastify";
 
 function VehicleAddForm() {
   const [formData, setFormData] = useState<vehicleFormData>({
     model: "",
-    seats:1,
+    seats: 0,
     type: "",
     licensePlate: "",
     fees: 0,
@@ -40,25 +41,17 @@ function VehicleAddForm() {
     );
 
     return res.data.secure_url;
-
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const user = auth.currentUser;
-    if (!user) {
-      toast.error("User not logged in!");
-      return;
-    }
-
-    if (!imageFile) {
-      toast.error("Please select an image.");
-      return;
-    }
-
+    const user = JSON.parse(localStorage.getItem("user")!);
+    
+   
+   
     try {
-      const imageUrl = await uploadImageToCloudinary(imageFile);
+      const imageUrl = await uploadImageToCloudinary(imageFile!);
 
       await addDoc(collection(db, "vehicles"), {
         model: formData.model,
@@ -75,13 +68,11 @@ function VehicleAddForm() {
 
       toast.success("Vehicle added successfully!");
 
-      setTimeout(() => {
-        navigate("/vhome");
-      }, 2000);
-
-
+      
+      console.log("Redirecting to /vhome...");
+      navigate("/vhome");
     } catch (error) {
-      console.error("Error adding vehicle:", error);
+     
       toast.error("Failed to add vehicle.");
     }
   };
@@ -112,7 +103,6 @@ function VehicleAddForm() {
             onChange={handleChange}
             className="w-full border p-2 rounded block"
             required
-            
           />
 
           <input

@@ -1,7 +1,7 @@
 export interface FormData {
   Email: string;
-  Password: string;
-  role: UserRole;
+  Password:  string;
+  role:"passenger" | "vowner" | "";
 }
 export type UserRole = "passenger" | "vowner" | "";
 
@@ -48,12 +48,41 @@ export interface  PassengerFormData {
 
 export interface vehicleFormData {
   model:string,
-  seats:number,
+  seats:number | undefined,
   type:string,
   licensePlate:string,
-  fees:number,
+  fees:number|undefined,
   available:false
 
 }
 
+
+export interface Vehicles{
+  id:string,
+  model:string,
+  seats:number,
+  type:string,
+  licensePlate:string,
+  fees:number,
+  available:boolean,
+}
+
+
+export interface Vehicle {
+  id: string;       
+  name: string;
+  fees: number;
+  seats: number;
+  
+  available: boolean;
+}
+
+export interface profileData{
+    Fname:string,
+        Lname:string,
+        email:string,
+        avatar:string,
+        role:"passenger" | "vowner",
+        uid:string,
+}
 

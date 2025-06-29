@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import{ useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useNavigate } from "react-router";
@@ -14,7 +14,7 @@ interface Vehicle {
 
 const AllAvailableVehicles = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,17 +32,13 @@ const AllAvailableVehicles = () => {
         setVehicles(vehicleList);
       } catch (error) {
         console.error("Error fetching vehicles", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchVehicles();
   }, []);
 
-  if (loading) return <p>Loading vehicles...</p>;
 
-  if (vehicles.length === 0) return <p>No vehicles found.</p>;
 
   return (
     <div className="bg-gradient-to-r from-cyan-900 via-cyan-500 ">

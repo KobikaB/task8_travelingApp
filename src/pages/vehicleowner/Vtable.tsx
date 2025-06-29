@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
-import { db, auth } from "@/firebase/config";
+import { useEffect, useState } from "react";
+
+import { db } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import type { Vehicles } from "@/types/Typescript";
+import { Link } from "react-router";
 
 function Vtable() {
-  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicles[]>([]);
   useEffect(() => {
     const fetchVehicles = async () => {
-      const user = auth.currentUser;
+      const user = JSON.parse(localStorage.getItem("user")!);
 
       if (user) {
         const q = query(
@@ -16,10 +18,11 @@ function Vtable() {
         );
 
         const snapshot = await getDocs(q);
-        const list: any[] = [];
+        const list: Vehicles[] = [];
         snapshot.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
+          list.push({ id: doc.id, ...doc.data() } as Vehicles);
         });
+
         setVehicles(list);
       }
     };
@@ -27,20 +30,51 @@ function Vtable() {
     fetchVehicles();
   }, []);
   return (
-    <div className="p-4 overflow-x-auto w-full ">
-      <table className="min-w-[900px] w-full border border-black">
-        <thead className="bg-gray-200">
-          <tr className="text-left border border-black">
-            <th className="px-4 py-2">VehicleId</th>
-            <th className="px-4 py-2">Model</th>
-            <th className="px-4 py-2">seats</th>
-            <th className="px-4 py-2">type</th>
-            <th className="px-4 py-2">LicensePlate</th>
-            <th className="px-4 py-2">Fees</th>
-            <th className="px-4 py-2">Available</th>
+    <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border ">
+      <table className="w-full text-left table-auto min-w-max">
+        <thead className="">
+          <tr>
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                VehicleId
+              </p>
+            </th>
 
-            <th className="px-4 py-2">Edit</th>
-            <th className="px-4 py-2">view</th>
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                Model
+              </p>
+            </th>
+
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                seats
+              </p>
+            </th>
+
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                type
+              </p>
+            </th>
+
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                LicensePlate
+              </p>
+            </th>
+
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                Fees
+              </p>
+            </th>
+
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                Available
+              </p>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -57,21 +91,11 @@ function Vtable() {
               </td>
 
               <td className="px-4 py-2 bg-white">
-                <Link
-                  to={``}
-                  className=" px-3 py-1 rounded hover:underline"
-                >
-                  Edit
-                </Link>
+                Edit
               </td>
 
               <td className="px-4 py-2 bg-white">
-                <Link
-                  to={``}
-                  className="bg-white hover:underline px-3 py-1 rounded"
-                >
-                  view
-                </Link>
+              view
               </td>
             </tr>
           ))}

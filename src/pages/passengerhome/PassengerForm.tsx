@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { auth, db } from "@/firebase/config";
-import { toast, ToastContainer } from "react-toastify";
+
 import { useNavigate, useParams } from "react-router";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import type { PassengerFormData } from "@/types/Typescript";
+import { toast,ToastContainer } from "react-toastify";
 
 
 
@@ -160,7 +161,7 @@ function PassengerForm() {
           </div>
         </form>
       </div>
-      <ToastContainer />
+   <ToastContainer />
     </div>
   );
 }

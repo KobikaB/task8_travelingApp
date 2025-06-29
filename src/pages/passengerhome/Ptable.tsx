@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { db, auth } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -31,19 +31,43 @@ function Ptable() {
   }, []);
 
   return (
-    <div className="p-4 overflow-x-auto w-full">
-      <h2 className="text-2xl mb-4 text-center text-indigo-900">My Bookings</h2>
-      <table className="min-w-[900px] w-full border border-black">
+    <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border ">
+     
+      <table className="w-full text-left table-auto min-w-max">
         <thead className="bg-gray-200">
-          <tr className="text-left border border-black">
-            <th className="px-4 py-2">Id</th>
-            <th className="px-4 py-2">Pickup Location</th>
-            <th className="px-4 py-2">Drop Location</th>
-            <th className="px-4 py-2">Pickup Date</th>
-            <th className="px-4 py-2">Pickup Time</th>
-            <th className="px-4 py-2">Passengers</th>
-            <th className="px-4 py-2">Vehicle ID</th>
-        
+          <tr >
+             <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+              Id
+              </p>
+            </th>
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+              Pickup Location
+              </p>
+            </th><th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+              Drop Location
+              </p>
+            </th><th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+              Pickup Date
+              </p>
+            </th><th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+              Pickup Time
+              </p>
+            </th><th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+              Passengers
+              </p>
+            </th>
+            <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+              <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+             Vehicle ID
+              </p>
+            </th>
+            
           </tr>
         </thead>
         <tbody>
