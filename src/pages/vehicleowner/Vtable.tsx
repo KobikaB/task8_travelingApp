@@ -58,7 +58,7 @@ function Vtable() {
 
               <td className="px-4 py-2 bg-white">
                 <Link
-                  to={`/edit/${vehicles.id}`}
+                  to={``}
                   className=" px-3 py-1 rounded hover:underline"
                 >
                   Edit
@@ -67,7 +67,7 @@ function Vtable() {
 
               <td className="px-4 py-2 bg-white">
                 <Link
-                  to={`/view/${vehicles.id}`}
+                  to={``}
                   className="bg-white hover:underline px-3 py-1 rounded"
                 >
                   view

@@ -69,7 +69,7 @@ function PassengerForm() {
         dropLocation: formData.dropLocation,
         pickupDate: formData.pickupDate,
         pickupTime: formData.pickupTime,
-        numberofPassengers: Number(formData.numberofPassengers),
+        numberofPassengers: formData.numberofPassengers,
         passengerName: user.displayName ,
       });
 

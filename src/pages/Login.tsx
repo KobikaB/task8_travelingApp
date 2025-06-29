@@ -9,50 +9,70 @@ import { toast, ToastContainer } from "react-toastify";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
 function Login() {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     Email: "",
     Password: "",
-    role: "",
+    role: "passenger",
   });
 
+  const viewPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRole = (role: UserRole) => {
     if (role === "passenger") {
       navigate("/phome");
-    } else {
+    } else if (role === "vowner") {
       navigate("/vhome");
+    } else {
+      toast.error("Unknown user role. Please contact support.");
     }
   };
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.role) {
-      toast.error("Please select a role.");
-      return;
-    }
-
-    const collectionName = formData.role === "passenger" ? "passengers" :  "vowners";
+    const collectionName =
+      formData.role === "passenger" ? "passengers" : "vowners";
 
     signInWithEmailAndPassword(auth, formData.Email, formData.Password)
-      .then((res) => getDoc(doc(db,collectionName , res.user.uid)))
-      .then((docSnap) => {
-        if (!docSnap.exists()) return toast.error("User not found");
+      .then((res) => {
+        return getDoc(doc(db, collectionName, res.user.uid)).then((docSnap) => {
+          if (!docSnap.exists()) {
+            toast.error("User not found");
+            return;
+          }
 
-        
-        const role = formData.role === "passenger" ? "passenger" :  "vowner";
-        
+          const userData = docSnap.data();
 
-        toast.success("Login successful!");
+          const user = {
+            uid: res.user.uid,
+            name: userData.name,
+            email: res.user.email,
+            role: userData.role,
+          };
 
-        setTimeout(() => {
-          handleRole(role);
-        }, 2000);
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("role", userData.role);
+
+          toast.success("Login successful!");
+          console.log("User data from Firestore:", userData);
+          console.log("Logging in as role:", userData.role);
+
+          handleRole(userData.role as UserRole);
+        });
       })
       .catch((error) => toast.error("Login failed: " + error.message));
   };
@@ -96,15 +116,25 @@ function Login() {
               <label className="block text-sm font-medium text-white">
                 Password
               </label>
-              <input
-                type="password"
-                name="Password"
-                value={formData.Password}
-                onChange={handleChange}
-                autoComplete="current-password"
-                required
-                className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="Password"
+                  value={formData.Password}
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                  required
+                  className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={viewPassword}
+                  className="absolute top-1/4 right-3 text-black"
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
+
               <div className="text-right mt-2">
                 <a
                   href="#"
@@ -121,6 +151,7 @@ function Login() {
                   type="radio"
                   name="role"
                   value="passenger"
+                  checked={formData.role === "passenger"}
                   onChange={handleChange}
                   className="mr-2 w-5 h-5"
                 />
@@ -130,6 +161,7 @@ function Login() {
                 <input
                   type="radio"
                   name="role"
+                  checked={formData.role === "vowner"}
                   onChange={handleChange}
                   value="vowner"
                   className="mr-2 w-5 h-5"

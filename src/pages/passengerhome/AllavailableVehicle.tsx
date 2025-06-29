@@ -22,7 +22,7 @@ const AllAvailableVehicles = () => {
       try {
         const vehicleCollection = collection(db, "vehicles");
         const snapshot = await getDocs(vehicleCollection);
-        const vehicleList = snapshot.docs.map(doc => ({
+        const vehicleList = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...(doc.data() as Omit<Vehicle, "id">),
         }));
@@ -45,35 +45,22 @@ const AllAvailableVehicles = () => {
   if (vehicles.length === 0) return <p>No vehicles found.</p>;
 
   return (
-    <div>
-      <h2>Available Vehicles</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-        {vehicles.map(vehicle => (
+    <div className="bg-gradient-to-r from-cyan-900 via-cyan-500 ">
+      <h2 className="flex justify-center text-2xl font-extrabold p-6 ">
+        Available Vehicles
+      </h2>
+      <div className="flex flex-wrap gap-10  ">
+        {vehicles.map((vehicle) => (
           <div
             key={vehicle.id}
             onClick={() => navigate(`/passenger/book/${vehicle.id}`)}
-            style={{
-              cursor: "pointer",
-              border: "1px solid #ccc",
-              borderRadius: 8,
-              padding: 10,
-              width: 250,
-            }}
+            className=" border-4 border-white bg-gray-400 text-xl font-bold  h-auto hover:cursor-pointer"
           >
-            <h3>{vehicle.name}</h3>
             <p>Seats: {vehicle.seats}</p>
             <p>Fees: Rs.{vehicle.fees}</p>
             <div>
               {vehicle.images && vehicle.images.length > 0 ? (
-                vehicle.images.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`${vehicle.name}-${idx}`}
-                    width={220}
-                    style={{ marginBottom: 10, borderRadius: 6 }}
-                  />
-                ))
+                vehicle.images.map((img, idx) => <img key={idx} src={img} />)
               ) : (
                 <p>No images available</p>
               )}
