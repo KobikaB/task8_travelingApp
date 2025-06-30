@@ -131,10 +131,10 @@ function Profile() {
               className="w-32 h-32 rounded-full object-cover mb-4"
             />
 
-            <p className="text-gray-700 border-2 border-amber-950 block w-full bg-gray-300 text-center">
+            <p className="text-gray-700 border-2 border-amber-950 block w-full bg-gray-400 text-center">
               {user.email}
             </p>
-            <p className="text-gray-700 border-2 border-amber-950 block w-full bg-gray-300 mt-5 text-center">
+            <p className="text-gray-700 border-2 border-amber-950 block w-full bg-gray-400 mt-5 text-center">
               {user.role}
             </p>
 
