@@ -41,20 +41,20 @@ const AllAvailableVehicles = () => {
 
 
   return (
-    <div className="bg-gradient-to-r from-cyan-900 via-cyan-500 ">
+    <div className="bg-gradient-to-r from-cyan-900 via-cyan-500  ">
       <h2 className="flex justify-center text-2xl font-extrabold p-6 ">
         Available Vehicles
       </h2>
-      <div className="flex flex-wrap gap-10  ">
+      <div className="flex flex-wrap gap-20  ">
         {vehicles.map((vehicle) => (
           <div
             key={vehicle.id}
             onClick={() => navigate(`/passenger/book/${vehicle.id}`)}
-            className=" border-4 border-white bg-gray-400 text-xl font-bold  h-auto hover:cursor-pointer"
+            className="w-100 h-90 bg-gray-300 object-cover rounded border-2 hover:border-white "
           >
             <p>Seats: {vehicle.seats}</p>
             <p>Fees: Rs.{vehicle.fees}</p>
-            <div>
+            <div className="">
               {vehicle.images && vehicle.images.length > 0 ? (
                 vehicle.images.map((img, idx) => <img key={idx} src={img} />)
               ) : (

@@ -151,7 +151,7 @@ function VehicleAddForm() {
             <input
               type="file"
               accept="image/*"
-              className="bg-gray-300 hover:cursor-pointer hover:bg-gray-500 p-3 w-55 "
+              
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0) {
                   setImageFile(e.target.files[0]);
