@@ -65,6 +65,7 @@ export interface Vehicles{
   licensePlate:string,
   fees:number,
   available:boolean,
+  images? : string[],
 }
 
 

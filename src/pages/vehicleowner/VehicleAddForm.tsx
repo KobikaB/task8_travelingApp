@@ -10,23 +10,29 @@ import { toast, ToastContainer } from "react-toastify";
 function VehicleAddForm() {
   const [formData, setFormData] = useState<vehicleFormData>({
     model: "",
-    seats: 0,
+    seats: undefined,
     type: "",
     licensePlate: "",
-    fees: 0,
+    fees: undefined,
     available: false,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+  const handleChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
   };
 
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
@@ -47,9 +53,7 @@ function VehicleAddForm() {
     e.preventDefault();
 
     const user = JSON.parse(localStorage.getItem("user")!);
-    
-   
-   
+
     try {
       const imageUrl = await uploadImageToCloudinary(imageFile!);
 
@@ -68,11 +72,8 @@ function VehicleAddForm() {
 
       toast.success("Vehicle added successfully!");
 
-      
-      console.log("Redirecting to /vhome...");
       navigate("/vhome");
     } catch (error) {
-     
       toast.error("Failed to add vehicle.");
     }
   };
@@ -90,7 +91,7 @@ function VehicleAddForm() {
             name="model"
             placeholder="Vehicle Model"
             value={formData.model}
-            onChange={handleChange}
+            onChange={handleChange1}
             className="w-full border p-2 rounded block"
             required
           />
@@ -100,7 +101,7 @@ function VehicleAddForm() {
             name="seats"
             placeholder="Number of Seats"
             value={formData.seats}
-            onChange={handleChange}
+            onChange={handleChange1}
             className="w-full border p-2 rounded block"
             required
           />
@@ -110,7 +111,7 @@ function VehicleAddForm() {
             name="type"
             placeholder="Vehicle Type"
             value={formData.type}
-            onChange={handleChange}
+            onChange={handleChange1}
             className="w-full border p-2 rounded block"
             required
           />
@@ -120,7 +121,7 @@ function VehicleAddForm() {
             name="licensePlate"
             placeholder="License Plate"
             value={formData.licensePlate}
-            onChange={handleChange}
+            onChange={handleChange1}
             className="w-full border p-2 rounded block"
             required
           />
@@ -130,7 +131,7 @@ function VehicleAddForm() {
             name="fees"
             placeholder="Rental Fee"
             value={formData.fees}
-            onChange={handleChange}
+            onChange={handleChange1}
             className="w-full border p-2 rounded block"
             required
             min={0}
@@ -141,7 +142,7 @@ function VehicleAddForm() {
               type="checkbox"
               name="available"
               checked={formData.available}
-              onChange={handleChange}
+              onChange={handleChange2}
             />
             Available
           </label>
@@ -151,7 +152,6 @@ function VehicleAddForm() {
             <input
               type="file"
               accept="image/*"
-              
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0) {
                   setImageFile(e.target.files[0]);
