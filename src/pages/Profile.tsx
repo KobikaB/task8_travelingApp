@@ -69,14 +69,14 @@ function Profile() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-30 p-6 bg-blue-400 shadow rounded">
+    <div className="max-w-md mx-auto mt-30 p-6 bg-gradient-to-r from-cyan-600 via-cyan-500 shadow rounded">
       <div className="flex flex-col items-center">
         {editMode ? (
           <>
             <img
               src={formData.avatar || defaultAvatar}
               alt="Avatar"
-              className="w-32 h-32 rounded-full object-cover mb-3"
+              className="w-32 h-32 rounded-full  object-cover mb-3"
             />
 
             <input type="file" onChange={handleAvatarChange} className="mb-4" />
@@ -131,16 +131,16 @@ function Profile() {
               className="w-32 h-32 rounded-full object-cover mb-4"
             />
 
-            <p className="text-gray-700 border-2 border-amber-950 block w-full bg-gray-400 text-center">
+            <p className=" text-blue-900 mb-1 text-2xl font-bold">
               {user.email}
             </p>
-            <p className="text-gray-700 border-2 border-amber-950 block w-full bg-gray-400 mt-5 text-center">
-              {user.role}
+            <p className=" bg-gray-200 mt-5 px-4 py-2 text-center rounded-lg ">
+              Role:{user.role}
             </p>
 
             <button
               onClick={() => setEditMode(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5"
+              className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5"
             >
               Edit Profile
             </button>
