@@ -1,5 +1,5 @@
 export interface FormData {
-  Email: string;
+  email: string;
   Password:  string;
   role:"passenger" | "vowner" | "";
 }
@@ -18,7 +18,7 @@ export interface Tconfig {
 export interface RegisterPage {
   Fname: string;
   Lname: string;
-  Email: string;
+  email: string;
   Password: string;
   ConfirmPassword: string;
   role: string;
@@ -43,6 +43,7 @@ export interface  PassengerFormData {
   seats: number;
   available: boolean;
   images: string[];
+  type:string,
 }
 
 

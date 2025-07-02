@@ -27,13 +27,13 @@ function VehicleOwnerHome() {
     fetchUserName();
   }, []);
   return (
-    <div className="w-full h-screen">
-      <img src={vh} alt="bgI" className="min-w-full min-h-full object-cover" />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-        <div className="text-white text-2xl  md:text-3xl font-extrabold mb-4  p-4 rounded-2xl bg-gradient-to-l from-cyan-700 via-cyan-600 mt-20">
+    <div className="relative w-full min-h-screen bg-gray-100">
+      <img src={vh} alt="bgI" className="absolute inset-0 w-full h-full object-cover " />
+      <div className="relative  flex flex-col items-center px-4 pt-20 pb-10">
+        <div className="text-white text-2xl  md:text-3xl font-extrabold mb-4  p-4 rounded-2xl bg-gradient-to-l from-cyan-700 via-cyan-600 mt-10 text-center">
           <h1>Welcome {fname}! </h1>
           <h2>
-            {" "}
+          
             Your vehicles, your business. Manage your rides, track bookings.
           </h2>
 
@@ -50,13 +50,13 @@ function VehicleOwnerHome() {
         <div>
           <button
             onClick={() => navigate("/addvehicle")}
-            className="bg-gray-400 text-white text-xl rounded hover:bg-black p-4 mb-10 "
+            className=" bg-gray-400 text-white text-xl rounded hover:bg-gray-500 p-4 mb-10 "
           >
             Add Vehicle
           </button>
         </div>
 
-        <div className=" w-full max-h-[400px] overflow-x-auto ">
+        <div className=" w-full bg-white/90 rounded-lg p-4 mt-6  overflow-x-auto overflow-y-auto ">
           <Vtable />
         </div>
       </div>

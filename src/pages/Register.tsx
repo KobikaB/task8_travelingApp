@@ -15,7 +15,7 @@ function Register() {
   const [formData, setFormData] = useState<RegisterPage>({
     Fname: "",
     Lname: "",
-    Email: "",
+    email: "",
     Password: "",
     ConfirmPassword: "",
     role: "passenger",
@@ -25,10 +25,10 @@ function Register() {
     setShowPassword((prev) => !prev);
   };
 
- const ChangeV = (e: React.ChangeEvent<HTMLInputElement>) => {
-     const { name, value } = e.target;
-     setFormData((prev) => ({ ...prev, [name]: value }));
-   };
+  const ChangeV = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ function Register() {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        formData.Email,
+        formData.email,
         formData.Password
       );
 
@@ -53,14 +53,25 @@ function Register() {
         userid: user.uid,
         Fname: formData.Fname,
         Lname: formData.Lname,
-        Email: formData.Email,
+        Email: formData.email,
         role: formData.role,
       });
+
+      const fullDetail = {
+        uid: user.uid,
+        Email: formData.email,
+        Fname: formData.Fname,
+        Lname: formData.Lname,
+        avatar: "",
+        role: formData.role,
+      };
+     localStorage.setItem("user", JSON.stringify(fullDetail));
+      console.log(user)
 
       toast.success("User successfully registered and data saved!");
       navigate("/login");
     } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
+      if (error.code === "email-already-in-use") {
         toast.error("This email is already registered. Please login.");
       } else {
         toast.error("Registration failed. Please try again.");
@@ -113,9 +124,9 @@ function Register() {
               </div>
               <input
                 type="email"
-                name="Email"
+                name="email"
                 placeholder="Email"
-                value={formData.Email}
+                value={formData.email}
                 onChange={ChangeV}
                 className="p-2 border-2 rounded  bg-white block w-full"
               />
@@ -135,7 +146,7 @@ function Register() {
                   onClick={viewPassword}
                   className="absolute top-1/4 right-3 text-gray-400"
                 >
-                  <FontAwesomeIcon icon={showPassword ?faEyeSlash: faEye} />
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                 </button>
               </div>
               <div className="relative">
@@ -154,7 +165,7 @@ function Register() {
                   onClick={viewPassword}
                   className="absolute top-1/4 right-3 text-gray-400"
                 >
-                  <FontAwesomeIcon icon={showPassword ? faEyeSlash: faEye} />
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                 </button>
               </div>
             </div>

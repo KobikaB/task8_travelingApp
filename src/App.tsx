@@ -10,6 +10,7 @@ import PassengerHome from "./pages/passengerhome/PassengerHome";
 import VehicleOwnerHome from "./pages/vehicleowner/VehicleOwnerHome";
 import RootLayout from "./layout/RootLayout";
 
+
 import VehicleAddForm from "./pages/vehicleowner/VehicleAddForm";
 import NotFound from "./pages/NotFound";
 import PassengerForm from "./pages/passengerhome/PassengerForm";
@@ -19,7 +20,6 @@ import ProtectedVownerRoute from "./pages/ProtectedVownerRoute";
 
 import ProtectedPassengerRoute from "./pages/ProtectedPassengerRoute";
 import Profile from "./pages/Profile";
-
 
 function App() {
   const router = createBrowserRouter(
@@ -43,9 +43,8 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/addvehicle" element={<VehicleAddForm />} />
-        
-        <Route path="*" element={<NotFound />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route path="allvehicle" element={<AllavailableVehicle />} />
       </>

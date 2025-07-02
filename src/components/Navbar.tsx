@@ -12,12 +12,24 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleLogoClick = () => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if(user.role === "vowner"){
+      navigate("/vhome");
+    }else if(user.role === "passenger"){
+      navigate("/phome")
+    }else{
+      navigate("/login")
+    }
+  }
+
   return (
     <div className=" bg-gradient-to-r from-cyan-400/50 via-blue-900 h-20 fixed top-0 w-screen z-50 ">
       <div className="flex items-center justify-between px-4 md:px-10 h-full">
         <img
           src={logo1}
           alt="logo"
+          onClick={handleLogoClick}
           className="h-12 sm:h-13 md:h-14 lg:h-16 rounded-full bg-amber-200 cursor-pointer "
         />
 

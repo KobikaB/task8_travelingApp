@@ -17,7 +17,7 @@ function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    Email: "",
+    email: "",
     Password: "",
     role: "passenger",
   });
@@ -47,7 +47,7 @@ function Login() {
     const collectionName =
       formData.role === "passenger" ? "passengers" : "vowners";
 
-    signInWithEmailAndPassword(auth, formData.Email, formData.Password)
+    signInWithEmailAndPassword(auth, formData.email, formData.Password)
       .then((res) => {
         return getDoc(doc(db, collectionName, res.user.uid)).then((docSnap) => {
           if (!docSnap.exists()) {
@@ -59,9 +59,11 @@ function Login() {
 
           const user = {
             uid: res.user.uid,
-            name: userData.name,
+            Fname: userData.Fname ,
+            Lname: userData.Lname ,
             email: res.user.email,
             role: userData.role,
+            avatar: userData.avatar ,
           };
 
           localStorage.setItem("user", JSON.stringify(user));
@@ -103,8 +105,8 @@ function Login() {
               </label>
               <input
                 type="email"
-                name="Email"
-                value={formData.Email}
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 autoComplete="email"
                 required

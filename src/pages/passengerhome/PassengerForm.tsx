@@ -1,18 +1,17 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { auth, db } from "@/firebase/config";
 
 import { useNavigate, useParams } from "react-router";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import type { PassengerFormData } from "@/types/Typescript";
-import { toast,ToastContainer } from "react-toastify";
-
-
-
+import { toast, ToastContainer } from "react-toastify";
 
 function PassengerForm() {
   const { vehicleId } = useParams();
   const navigate = useNavigate();
-  const [vehicleInfo, setVehicleInfo] = useState<PassengerFormData | null>(null);
+  const [vehicleInfo, setVehicleInfo] = useState<PassengerFormData | null>(
+    null
+  );
 
   const [formData, setFormData] = useState({
     pickupLocation: "",
@@ -44,17 +43,13 @@ function PassengerForm() {
     fetchVehicleDetails();
   }, [vehicleId]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = auth.currentUser;
-
-    if (!user) {
-      return toast.error("you must logged In");
-    }
+    const user = auth.currentUser!;
 
     if (!vehicleId) {
       return toast.error("vehicle id missing");
@@ -71,13 +66,13 @@ function PassengerForm() {
         pickupDate: formData.pickupDate,
         pickupTime: formData.pickupTime,
         numberofPassengers: formData.numberofPassengers,
-        passengerName: user.displayName ,
+        passengerName: user.displayName,
       });
 
       toast.success("Successfully Book");
-      setTimeout(() => {
+     
         navigate("/phome");
-      }, 2000);
+     
     } catch (error) {
       toast.error("Booking failed");
     }
@@ -93,7 +88,9 @@ function PassengerForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {vehicleInfo && (
             <div className="bg-blue-400 p-4 rounded mb-4 text-center">
-             
+              <p>
+                <strong>Vehicle Name:</strong> {vehicleInfo.type}
+              </p>
               <p>
                 <strong>Seats:</strong> {vehicleInfo.seats}
               </p>
@@ -144,8 +141,7 @@ function PassengerForm() {
           <input
             type="number"
             name="numberofPassengers"
-             placeholder="Number Of Passengers"
-            
+            placeholder="Number Of Passengers"
             value={formData.numberofPassengers}
             onChange={handleChange}
             required
@@ -161,7 +157,7 @@ function PassengerForm() {
           </div>
         </form>
       </div>
-   <ToastContainer />
+      <ToastContainer />
     </div>
   );
 }

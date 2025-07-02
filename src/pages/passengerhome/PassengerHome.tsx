@@ -30,13 +30,13 @@ function PassengerHome() {
   }, []);
 
   return (
-    <div className="w-full h-screen">
+    <div className="relative w-full min-h-screen bg-gray-100">
       <img
         src={HomeI}
         alt="bgI"
-        className="min-w-full min-h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover z-0"
       />
-      <div className="absolute inset-0 flex items-center justify-center text-center flex-col px-4">
+      <div className="relative flex flex-col items-center px-4 ">
         <div className=" text-white text-2xl  md:text-3xl font-extrabold mb-4 text-center bg-blue-500 p-4 rounded-2xl bg-gradient-to-l from-cyan-400 via-cyan-600 mt-40 ">
           <h1 className="text-blue-900">welcome to {fname}!</h1> 
           <h2>abroad let's get moving! adventure starts here!</h2>
@@ -47,7 +47,7 @@ function PassengerHome() {
 
         <Button
           variant="outline"
-          className="text-2xl hover:cursor-pointer m-5 text-white bg-indigo-800/60 p-8 w-auto hover:bg-indigo-700"
+          className="text-2xl hover:cursor-pointer m-5 text-white bg-indigo-500/60 p-8 w-auto hover:bg-indigo-700/60"
        onClick={() => navigate("/allvehicle")} 
          
         >
@@ -55,7 +55,7 @@ function PassengerHome() {
         </Button>
 
 
-        <div className=" w-full max-h-[400px] overflow-x-auto ">
+        <div className=" w-full bg-white/90 rounded-lg p-4 mt-6  overflow-x-auto overflow-y-auto">
           <Ptable />
         </div>
 
