@@ -7,8 +7,10 @@ import type { Vehicles } from "@/types/Typescript";
 function Vtable() {
   const [vehicles, setVehicles] = useState<Vehicles[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicles | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     const fetchVehicles = async () => {
+      setLoading(true);
       const user = JSON.parse(localStorage.getItem("user")!);
 
       if (user) {
@@ -17,18 +19,29 @@ function Vtable() {
           where("ownerId", "==", user.uid)
         );
 
-        const snapshot = await getDocs(q);
-        const list: Vehicles[] = [];
-        snapshot.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() } as Vehicles);
-        });
+        try {
+          const snapshot = await getDocs(q);
+          const list: Vehicles[] = [];
+          snapshot.forEach((doc) => {
+            list.push({ id: doc.id, ...doc.data() } as Vehicles);
+          });
 
-        setVehicles(list);
+          setVehicles(list);
+        } catch (error) {
+          toast.error("Error for fetching Books");
+        }
       }
+      setLoading(false);
     };
 
     fetchVehicles();
   }, []);
+
+
+   if(loading){
+   return <p className="text-center text-2xl text-emerald-500">Loading datas.....</p>
+  }
+
   return (
     <>
       <div className="  w-full h-full shadow-md rounded-xl  ">
@@ -118,7 +131,7 @@ function Vtable() {
 
       {selectedVehicle && (
         <div className=" flex justify-center items-center bg-black fixed inset-0 px-4">
-          <div className="bg-white rounded-lg max-w-xl w-full p-6 relative shadow-lg ">
+          <div className="bg-white rounded-lg max-w-xl w-full p-6 relative shadow-lg mt-20 ">
             <button
               onClick={() => setSelectedVehicle(null)}
               className="absolute top-0 right-1 text-blue-900 hover:text-red-600 text-xl font-bold "
@@ -148,7 +161,7 @@ function Vtable() {
                   <strong>Fees:</strong> Rs. {selectedVehicle.fees}
                 </p>
                 <p>
-                  <strong>Available:</strong>{" "}
+                  <strong>Available:</strong>
                   {selectedVehicle.available ? "Yes" : "No"}
                 </p>
               </div>

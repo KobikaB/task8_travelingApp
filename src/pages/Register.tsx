@@ -84,7 +84,7 @@ function Register() {
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 via-blue-600 px-6 py-12">
         <img
           className="mx-auto h-20 w-auto rounded-full mt-4"
-          src="./src/images/travelLogo.jpeg"
+          src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567816/ir75iiaon8f6sqjmcqi1.jpg"
           alt="Your Company"
         />
 
@@ -213,7 +213,7 @@ function Register() {
 
       <div
         className="hidden md:block md:w-1/2 bg-cover bg-center object-cover"
-        style={{ backgroundImage: "url('./src/Images/carpic.avif')" }}
+        style={{ backgroundImage: "url('https://res.cloudinary.com/dq5buemig/image/upload/v1751569106/nxutbtfsi1k2cg910weq.avif')" }}
       ></div>
 
       <ToastContainer />

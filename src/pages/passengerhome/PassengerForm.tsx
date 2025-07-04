@@ -2,7 +2,7 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { auth, db } from "@/firebase/config";
 
 import { useNavigate, useParams } from "react-router";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, serverTimestamp } from "firebase/firestore";
 import type { PassengerFormData } from "@/types/Typescript";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -67,6 +67,7 @@ function PassengerForm() {
         pickupTime: formData.pickupTime,
         numberofPassengers: formData.numberofPassengers,
         passengerName: user.displayName,
+        createdAt: serverTimestamp(),
       });
 
       toast.success("Successfully Book");
@@ -79,8 +80,8 @@ function PassengerForm() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-cyan-600 px-4 mt-20">
-      <div className="w-full max-w-xl bg-white rounded shadow-md h-auto p-6 ">
+    <div className=" min-h-screen  flex items-center justify-center bg-cyan-600 px-4 py-8">
+      <div className="w-full max-w-md bg-white rounded shadow-md h-auto p-6 mt-18 ">
         <h2 className="text-2xl mb-4 text-center text-indigo-900">
           Add New Bookings
         </h2>
@@ -107,7 +108,7 @@ function PassengerForm() {
             value={formData.pickupLocation}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded block"
           />
 
           <input
@@ -117,7 +118,7 @@ function PassengerForm() {
             value={formData.dropLocation}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded block"
           />
 
           <input
@@ -126,7 +127,7 @@ function PassengerForm() {
             value={formData.pickupDate}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded block"
           />
 
           <input
@@ -135,7 +136,7 @@ function PassengerForm() {
             value={formData.pickupTime}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded block"
           />
 
           <input
@@ -145,7 +146,7 @@ function PassengerForm() {
             value={formData.numberofPassengers}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded block"
           />
           <div className="flex justify-center mt-5">
             <button

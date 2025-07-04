@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import logo1 from "../images/travelLogo.jpeg";
+
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
@@ -27,7 +27,7 @@ const Navbar = () => {
     <div className=" bg-gradient-to-r from-cyan-400/50 via-blue-900 h-20 fixed top-0 w-screen z-50 ">
       <div className="flex items-center justify-between px-4 md:px-10 h-full">
         <img
-          src={logo1}
+          src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567816/ir75iiaon8f6sqjmcqi1.jpg"
           alt="logo"
           onClick={handleLogoClick}
           className="h-12 sm:h-13 md:h-14 lg:h-16 rounded-full bg-amber-200 cursor-pointer "

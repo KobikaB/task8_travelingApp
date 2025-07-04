@@ -1,5 +1,5 @@
 import  { useEffect, useState } from "react";
-import HomeI from "@/images/Homebg5.jpg";
+
 // import homepageI1 from "@/images/homepageI1.jpeg";
 import { auth, db } from "@/firebase/config";
 import { doc, getDoc } from "firebase/firestore";
@@ -28,11 +28,12 @@ function PassengerHome() {
 
     fetchUserName();
   }, []);
+  
 
   return (
     <div className="relative w-full min-h-screen bg-gray-100">
       <img
-        src={HomeI}
+        src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567755/no4gj5peshgbrmyyzzns.png"
         alt="bgI"
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
@@ -55,7 +56,7 @@ function PassengerHome() {
         </Button>
 
 
-        <div className=" w-full bg-white/90 rounded-lg p-4 mt-6  overflow-x-auto overflow-y-auto">
+        <div className="w-full bg-white/90 rounded-lg p-4 mt-6  overflow-x-auto overflow-y-auto">
           <Ptable />
         </div>
 

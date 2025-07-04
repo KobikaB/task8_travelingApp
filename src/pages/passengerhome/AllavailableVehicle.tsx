@@ -40,7 +40,7 @@ const AllAvailableVehicles = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-r from-cyan-900 via-cyan-500 min-h-screen p-4 ">
+    <div className="bg-gradient-to-r from-cyan-900 via-cyan-500 min-h-screen  ">
       <h2 className="flex justify-center text-2xl font-extrabold p-6  ">
         Available Vehicles
       </h2>

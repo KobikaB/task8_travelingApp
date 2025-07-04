@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import vh from "@/images/vehicleH2.jpg";
 import { auth, db } from "@/firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -28,7 +27,7 @@ function VehicleOwnerHome() {
   }, []);
   return (
     <div className="relative w-full min-h-screen bg-gray-100">
-      <img src={vh} alt="bgI" className="absolute inset-0 w-full h-full object-cover " />
+      <img src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567754/ik3eiuw2jv74mzgojrlw.jpg" alt="bgI" className="absolute inset-0 w-full h-full object-cover " />
       <div className="relative  flex flex-col items-center px-4 pt-20 pb-10">
         <div className="text-white text-2xl  md:text-3xl font-extrabold mb-4  p-4 rounded-2xl bg-gradient-to-l from-cyan-700 via-cyan-600 mt-10 text-center">
           <h1>Welcome {fname}! </h1>

@@ -83,12 +83,12 @@ function Login() {
     <div className="min-h-screen flex">
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gradient-to-r from-cyan-900 via-cyan-500 px-6 py-12">
         <img
-          className="mx-auto h-20 w-auto rounded-full"
-          src="/src/images/travelLogo.jpeg"
+          className="mx-auto h-20 w-auto rounded-full mt-4"
+          src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567816/ir75iiaon8f6sqjmcqi1.jpg"
           alt="logo"
         />
 
-        <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-white">
+        <h2 className="text-center text-2xl font-bold tracking-tight text-white">
           Login App
         </h2>
 
@@ -190,7 +190,7 @@ function Login() {
 
       <div
         className="hidden md:block md:w-1/2 bg-cover bg-center  object-cover"
-        style={{ backgroundImage: "url('./src/Images/Lpic.avif')" }}
+        style={{ backgroundImage: "url('https://res.cloudinary.com/dq5buemig/image/upload/v1751567752/lm0rx7a89oa65w7gmz0m.avif')" }}
       ></div>
 
       <ToastContainer />

@@ -3,9 +3,11 @@ import { db } from "../../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
 
-import axios from "axios";
 import type { vehicleFormData } from "@/types/Typescript";
 import { toast, ToastContainer } from "react-toastify";
+import uploadImageToCloudinary from "@/utils/uploadImageToCloudinary";
+
+import CloudinaryConfig from "@/utils/CloudinaryConfig";
 
 function VehicleAddForm() {
   const [formData, setFormData] = useState<vehicleFormData>({
@@ -35,27 +37,13 @@ function VehicleAddForm() {
     }));
   };
 
-  const uploadImageToCloudinary = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "vehicles");
-    formData.append("folder", "vehicleImages");
-
-    const res = await axios.post(
-      "https://api.cloudinary.com/v1_1/dq5buemig/image/upload",
-      formData
-    );
-
-    return res.data.secure_url;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const user = JSON.parse(localStorage.getItem("user")!);
 
     try {
-      const imageUrl = await uploadImageToCloudinary(imageFile!);
+      const imageUrl = await uploadImageToCloudinary(imageFile!,CloudinaryConfig.folder);
 
       await addDoc(collection(db, "vehicles"), {
         model: formData.model,
@@ -79,8 +67,8 @@ function VehicleAddForm() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-cyan-800 px-4">
-      <div className="w-full bg-white shadow-md rounded max-w-xl h-auto p-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-cyan-800 px-4 py-8">
+      <div className="w-full bg-white shadow-md rounded max-w-xl h-auto p-6 mt-18">
         <h2 className="text-2xl mt-4 mb-6 text-center text-indigo-700/50">
           Add New Vehicle
         </h2>
@@ -148,11 +136,11 @@ function VehicleAddForm() {
           </label>
 
           <div>
-            <label className="block mb-1">Upload Vehicle Image</label>
+            <label className="block mb-1 ">Upload Vehicle Image</label>
             <input
               type="file"
               accept="image/*"
-              className="bg-blue-300 p-3 w-auto hover:bg-cyan-100 hover:cursor-pointer"
+              className="bg-blue-300 w-22 p-2 hover:bg-cyan-100 hover:cursor-pointer"
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0) {
                   setImageFile(e.target.files[0]);

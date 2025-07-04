@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/firebase/config";
-import defaultAvatar from "@/images/avatar.jpg";
 import type { profileData } from "@/types/Typescript";
+import uploadImageToCloudinary from "@/utils/uploadImageToCloudinary";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { doc, updateDoc } from "firebase/firestore";
@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { toast, ToastContainer } from "react-toastify";
+
+const defaultAvatar = "https://res.cloudinary.com/dq5buemig/image/upload/v1751573116/xxdfokffjsoouc45b86k.jpg";
 
 function Profile() {
   const navigate = useNavigate();
@@ -19,54 +21,67 @@ function Profile() {
     avatar: "",
     role: "passenger",
     uid: "",
-  });
-  const [formData, setFormData] = useState<profileData>(user);
+  })
+
   const [editMode, setEditMode] = useState(false);
+  const [loading,setLoading] = useState(false);
+  
 
   useEffect(() => {
     const luser = JSON.parse(localStorage.getItem("user")!);
-    setFormData(luser);
+ 
     setUser(luser);
   }, []);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setUser((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
+  }
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
+   try{
+    setLoading(true);
+    
+    const url = await uploadImageToCloudinary(file,"vehicleImages/Avatar");
+    setUser((prev)=>({...prev,avatar:url}));
+    toast.success("avatar upload");
 
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, avatar: reader.result as string }));
-    };
+   }
+   catch{
+    toast.error("failed to upload the avatar");
 
-    reader.readAsDataURL(file);
-  };
+   }
+   finally {
+    setLoading(false);
+  }
+   
+  }
 
   const handleSave = async () => {
     try {
       const updated = {
-        Fname: formData.Fname,
-        Lname: formData.Lname,
-        email: formData.email,
-        avatar: formData.avatar,
+        Fname: user.Fname,
+        Lname: user.Lname,
+        email:user.email,
+        avatar: user.avatar,
       };
       const collectionName =
-        formData.role === "passenger" ? "passengers" : "vowners";
+        user.role === "passenger" ? "passengers" : "vowners";
 
-      await updateDoc(doc(db, collectionName, formData.uid), updated);
+      await updateDoc(doc(db, collectionName, user.uid), updated);
 
-      localStorage.setItem("user", JSON.stringify({ ...formData }));
-      setUser(formData);
+      localStorage.setItem("user", JSON.stringify(user));
+     
       setEditMode(false);
       toast.success("profile page updated succefully");
+
     } catch (error) {
       toast.error("updated error");
     }
@@ -75,25 +90,24 @@ function Profile() {
   const handleBack = () => {
     if (user.role === "passenger") {
       navigate("/phome");
-    } else if (user.role === "vowner") {
+    } else   {
       navigate("/vhome");
-    } else {
-      navigate("/");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-30 p-6 bg-gradient-to-r from-cyan-600 via-cyan-500 shadow rounded">
-      <div className="flex flex-col items-center gap-3">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-cyan-600 via-cyan-500 p-3">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+      <div className="flex flex-col items-center gap-3 ">
         <FontAwesomeIcon
           icon={faArrowLeft}
-          className=" place-self-start gap-2 text-white cursor-pointer hover:text-black mb-4"
+          className=" self-start gap-2  cursor-pointer mb-4"
           onClick={handleBack}
         />
         {editMode ? (
           <>
             <img
-              src={formData.avatar || defaultAvatar}
+              src={user.avatar }
               alt="Avatar"
               className="w-32 h-32 rounded-full  object-cover mb-3"
             />
@@ -107,7 +121,7 @@ function Profile() {
               type="text"
               name="Fname"
               placeholder="First Name"
-              value={formData.Fname}
+              value={user.Fname}
               onChange={handleChange}
               pattern="[A-Za-z]+"
               title="Only letters allowed"
@@ -118,7 +132,7 @@ function Profile() {
               type="text"
               name="Lname"
               placeholder="Last Name"
-              value={formData.Lname}
+              value={user.Lname}
               onChange={handleChange}
               pattern="[A-Za-z]+"
               title="Only letters allowed"
@@ -129,20 +143,22 @@ function Profile() {
               type="email"
               name="email"
               placeholder="Email"
-              value={formData.email}
+              value={user.email}
               onChange={handleChange}
               className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
             />
             <div className="flex gap-4 mt-4">
-              <Button
+              {loading ? "Uploading....." :(<><Button
                 onClick={handleSave}
-                className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 "
+                className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer "
               >
-                Save
-              </Button>
+              Save
+             
+              </Button></>)}
+              
 
               <Button
-                className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 "
+                className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer "
                 onClick={() => setEditMode(false)}
               >
                 Cancel
@@ -154,14 +170,14 @@ function Profile() {
             <img
               src={user.avatar || defaultAvatar}
               alt="Avatar"
-              className="w-32 h-32 rounded-full object-cover "
+              className="w-40 h-40 rounded-full object-cover border-2 border-blue-950 "
             />
             <div className=" p-5 text-center rounded-2xl">
-              <p className="text-blue-900 mb-1 text-2xl font-bold">
+              <p className="text-blue-900 mb-1 text-xl font-bold ">
                 {user.Fname} {user.Lname}
               </p>
 
-              <p className=" text-blue-900 mb-1 text-2xl font-bold">
+              <p className=" text-blue-900 mb-1 text-xl font-bold ">
                 {user.email}
               </p>
               <p className="  text-blue-900 mb-1 text-xl ">Role:{user.role}</p>
@@ -169,18 +185,18 @@ function Profile() {
 
             <button
               onClick={() => {
-                setFormData(user);
+               
                 setEditMode(true);
               }}
-              className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5"
+              className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5 hover:cursor-pointer"
             >
               Edit Profile
             </button>
           </>
         )}
-        ;
+        
       </div>
-
+</div>
       <ToastContainer />
     </div>
   );
