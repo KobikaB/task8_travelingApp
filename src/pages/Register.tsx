@@ -8,6 +8,9 @@ import type { RegisterPage } from "@/types/Typescript";
 import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import bg1 from "@/assets/image/carpic.avif"
+import logo from "@/assets/image/travelLogo.jpeg"
+
 
 function Register() {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ function Register() {
   const ChangeV = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,16 +61,8 @@ function Register() {
         role: formData.role,
       });
 
-      const fullDetail = {
-        uid: user.uid,
-        Email: formData.email,
-        Fname: formData.Fname,
-        Lname: formData.Lname,
-        avatar: "",
-        role: formData.role,
-      };
-     localStorage.setItem("user", JSON.stringify(fullDetail));
-      console.log(user)
+      
+    
 
       toast.success("User successfully registered and data saved!");
       navigate("/login");
@@ -84,7 +80,7 @@ function Register() {
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 via-blue-600 px-6 py-12">
         <img
           className="mx-auto h-20 w-auto rounded-full mt-4"
-          src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567816/ir75iiaon8f6sqjmcqi1.jpg"
+          src={logo}
           alt="Your Company"
         />
 
@@ -213,7 +209,7 @@ function Register() {
 
       <div
         className="hidden md:block md:w-1/2 bg-cover bg-center object-cover"
-        style={{ backgroundImage: "url('https://res.cloudinary.com/dq5buemig/image/upload/v1751569106/nxutbtfsi1k2cg910weq.avif')" }}
+        style={{ backgroundImage: `url(${bg1})` }}
       ></div>
 
       <ToastContainer />

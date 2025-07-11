@@ -3,14 +3,14 @@ import { db } from "../../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
 
-import type { vehicleFormData } from "@/types/Typescript";
+
 import { toast, ToastContainer } from "react-toastify";
 import uploadImageToCloudinary from "@/utils/uploadImageToCloudinary";
+import type { VehiclesData } from "@/types/Typescript";
 
-import CloudinaryConfig from "@/utils/CloudinaryConfig";
 
 function VehicleAddForm() {
-  const [formData, setFormData] = useState<vehicleFormData>({
+  const [formData, setFormData] = useState<VehiclesData>({
     model: "",
     seats: undefined,
     type: "",
@@ -43,7 +43,7 @@ function VehicleAddForm() {
     const user = JSON.parse(localStorage.getItem("user")!);
 
     try {
-      const imageUrl = await uploadImageToCloudinary(imageFile!,CloudinaryConfig.folder);
+      const imageUrl = await uploadImageToCloudinary(imageFile!,"vehicleImages");
 
       await addDoc(collection(db, "vehicles"), {
         model: formData.model,
@@ -74,6 +74,8 @@ function VehicleAddForm() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          
           <input
             type="text"
             name="model"
@@ -125,22 +127,26 @@ function VehicleAddForm() {
             min={0}
           />
 
-          <label className="flex items-center gap-2">
+          <label htmlFor="checkbx" className="flex items-center gap-2 ">
             <input
+            id="checkbx"
               type="checkbox"
               name="available"
               checked={formData.available}
               onChange={handleChange2}
+              className="hover:cursor-pointer"
             />
             Available
           </label>
 
           <div>
-            <label className="block mb-1 ">Upload Vehicle Image</label>
+            <label htmlFor="v-image" className="block mb-1 ">Upload Vehicle Image</label>
             <input
+            id="v-image"
               type="file"
               accept="image/*"
-              className="bg-blue-300 w-22 p-2 hover:bg-cyan-100 hover:cursor-pointer"
+              className="
+              bg-cyan-100 hover:cursor-pointer w-full block max-w-2xs p-3 "
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0) {
                   setImageFile(e.target.files[0]);
@@ -152,7 +158,7 @@ function VehicleAddForm() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded "
+              className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded hover:cursor-pointer "
             >
               Add Vehicle
             </button>

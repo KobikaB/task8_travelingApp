@@ -10,7 +10,8 @@ import { useNavigate } from "react-router";
 
 import { toast, ToastContainer } from "react-toastify";
 
-const defaultAvatar = "https://res.cloudinary.com/dq5buemig/image/upload/v1751573116/xxdfokffjsoouc45b86k.jpg";
+const defaultAvatar =
+  "https://res.cloudinary.com/dq5buemig/image/upload/v1751573116/xxdfokffjsoouc45b86k.jpg";
 
 function Profile() {
   const navigate = useNavigate();
@@ -21,18 +22,19 @@ function Profile() {
     avatar: "",
     role: "passenger",
     uid: "",
-  })
+  });
 
   const [editMode, setEditMode] = useState(false);
-  const [loading,setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const luser = JSON.parse(localStorage.getItem("user")!);
- 
-    setUser(luser);
+    if (luser) {
+      setUser(luser);
+    } else {
+      navigate("/login");
+    }
   }, []);
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,36 +42,32 @@ function Profile() {
       ...prev,
       [name]: value,
     }));
-  }
+  };
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-   try{
-    setLoading(true);
-    
-    const url = await uploadImageToCloudinary(file,"vehicleImages/Avatar");
-    setUser((prev)=>({...prev,avatar:url}));
-    toast.success("avatar upload");
+    try {
+      setLoading(true);
 
-   }
-   catch{
-    toast.error("failed to upload the avatar");
-
-   }
-   finally {
-    setLoading(false);
-  }
-   
-  }
+      //Upload the image to cloudinary
+      const url = await uploadImageToCloudinary(file, "vehicleImages/Avatar");
+      setUser((prev) => ({ ...prev, avatar: url }));
+      toast.success("avatar upload");
+    } catch {
+      toast.error("failed to upload the avatar");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSave = async () => {
     try {
       const updated = {
         Fname: user.Fname,
         Lname: user.Lname,
-        email:user.email,
+        email: user.email,
         avatar: user.avatar,
       };
       const collectionName =
@@ -78,19 +76,18 @@ function Profile() {
       await updateDoc(doc(db, collectionName, user.uid), updated);
 
       localStorage.setItem("user", JSON.stringify(user));
-     
+
       setEditMode(false);
       toast.success("profile page updated succefully");
-
     } catch (error) {
-      toast.error("updated error");
+      toast.error("Profile page updated error");
     }
   };
 
   const handleBack = () => {
     if (user.role === "passenger") {
       navigate("/phome");
-    } else   {
+    } else {
       navigate("/vhome");
     }
   };
@@ -98,105 +95,110 @@ function Profile() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-cyan-600 via-cyan-500 p-3">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-      <div className="flex flex-col items-center gap-3 ">
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          className=" self-start gap-2  cursor-pointer mb-4"
-          onClick={handleBack}
-        />
-        {editMode ? (
-          <>
-            <img
-              src={user.avatar }
-              alt="Avatar"
-              className="w-32 h-32 rounded-full  object-cover mb-3"
-            />
+        <div className="flex flex-col items-center gap-3 ">
+          <FontAwesomeIcon
+            icon={faArrowLeft}
+            className=" self-start   cursor-pointer mb-4"
+            onClick={handleBack}
+          />
+          {editMode ? (
+            <>
+              <img
+                src={user.avatar || defaultAvatar}
+                alt="Avatar"
+                className="w-32 h-32 rounded-full  object-cover mb-3"
+              />
 
-            <input 
-            type="file"
-             onChange={handleAvatarChange}
-              className="mb-4" />
+              <input
+                type="file"
+                onChange={handleAvatarChange}
+                className="mb-4"
+              />
 
-            <input
-              type="text"
-              name="Fname"
-              placeholder="First Name"
-              value={user.Fname}
-              onChange={handleChange}
-              pattern="[A-Za-z]+"
-              title="Only letters allowed"
-              className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
-            />
+              <input
+                type="text"
+                name="Fname"
+                placeholder="First Name"
+                value={user.Fname}
+                onChange={handleChange}
+                pattern="[A-Za-z]+"
+                title="Only letters allowed"
+                className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
+              />
 
-            <input
-              type="text"
-              name="Lname"
-              placeholder="Last Name"
-              value={user.Lname}
-              onChange={handleChange}
-              pattern="[A-Za-z]+"
-              title="Only letters allowed"
-              className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
-            />
+              <input
+                type="text"
+                name="Lname"
+                placeholder="Last Name"
+                value={user.Lname}
+                onChange={handleChange}
+                pattern="[A-Za-z]+"
+                title="Only letters allowed"
+                className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
+              />
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={user.email}
-              onChange={handleChange}
-              className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
-            />
-            <div className="flex gap-4 mt-4">
-              {loading ? "Uploading....." :(<><Button
-                onClick={handleSave}
-                className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer "
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={user.email}
+                onChange={handleChange}
+                className="p-2 border-2 rounded  bg-white block w-full sm:text-sm"
+              />
+              <div className="flex gap-4 mt-4">
+                {loading ? (
+                  "Uploading....."
+                ) : (
+                  <>
+                    <Button
+                      onClick={handleSave}
+                      className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer "
+                    >
+                      Save
+                    </Button>
+                  </>
+                )}
+
+                <Button
+                  className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer "
+                  onClick={() => setEditMode(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <img
+                src={user.avatar || defaultAvatar}
+                alt="Avatar"
+                className="w-40 h-40 rounded-full object-cover border-2 border-blue-950 "
+              />
+              <div className=" p-5 text-center rounded-2xl">
+                <p className="text-blue-900 mb-1 text-xl font-bold ">
+                  {user.Fname} {user.Lname}
+                </p>
+
+                <p className=" text-blue-900 mb-1 text-xl font-bold ">
+                  {user.email}
+                </p>
+                <p className="  text-blue-900 mb-1 text-xl ">
+                  Role:{user.role}
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setEditMode(true);
+                }}
+                className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5 hover:cursor-pointer"
               >
-              Save
-             
-              </Button></>)}
-              
-
-              <Button
-                className="bg-gray-400  px-4 py-2 rounded hover:bg-gray-500 hover:cursor-pointer "
-                onClick={() => setEditMode(false)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <img
-              src={user.avatar || defaultAvatar}
-              alt="Avatar"
-              className="w-40 h-40 rounded-full object-cover border-2 border-blue-950 "
-            />
-            <div className=" p-5 text-center rounded-2xl">
-              <p className="text-blue-900 mb-1 text-xl font-bold ">
-                {user.Fname} {user.Lname}
-              </p>
-
-              <p className=" text-blue-900 mb-1 text-xl font-bold ">
-                {user.email}
-              </p>
-              <p className="  text-blue-900 mb-1 text-xl ">Role:{user.role}</p>
-            </div>
-
-            <button
-              onClick={() => {
-               
-                setEditMode(true);
-              }}
-              className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5 hover:cursor-pointer"
-            >
-              Edit Profile
-            </button>
-          </>
-        )}
-        
+                Edit Profile
+              </button>
+            </>
+          )}
+        </div>
       </div>
-</div>
       <ToastContainer />
     </div>
   );

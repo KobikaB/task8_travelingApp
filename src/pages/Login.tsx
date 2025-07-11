@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
-import type { FormData, UserRole } from "../types/Typescript";
+import type { FormData} from "../types/Typescript";
 
 import { toast, ToastContainer } from "react-toastify";
 
@@ -11,16 +11,31 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import bg1 from "@/assets/image/Lpic.avif";
+import logo from "@/assets/image/travelLogo.jpeg";
+import { useAuth } from "@/contexts/AuthProvider";
 
 function Login() {
   const navigate = useNavigate();
+  const { user,setUser } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     email: "",
-    Password: "",
+    password: "",
     role: "passenger",
   });
+
+
+  useEffect(()=>{
+    if(user){
+      if(user.role === "passenger"){
+        navigate("/phome",{ replace: true });
+      }else if(user.role === "vowner"){
+        navigate("/vhome",{ replace: true });
+      }
+    }
+  },[user])
 
   const viewPassword = () => {
     setShowPassword((prev) => !prev);
@@ -31,15 +46,7 @@ function Login() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRole = (role: UserRole) => {
-    if (role === "passenger") {
-      navigate("/phome");
-    } else if (role === "vowner") {
-      navigate("/vhome");
-    } else {
-      toast.error("Unknown user role. Please contact support.");
-    }
-  };
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +54,7 @@ function Login() {
     const collectionName =
       formData.role === "passenger" ? "passengers" : "vowners";
 
-    signInWithEmailAndPassword(auth, formData.email, formData.Password)
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then((res) => {
         return getDoc(doc(db, collectionName, res.user.uid)).then((docSnap) => {
           if (!docSnap.exists()) {
@@ -59,24 +66,35 @@ function Login() {
 
           const user = {
             uid: res.user.uid,
-            Fname: userData.Fname ,
-            Lname: userData.Lname ,
-            email: res.user.email,
+           Fname: userData.Fname,  
+        Lname: userData.Lname,
+        avatar: userData.avatar,
+            email: res.user.email!,
             role: userData.role,
-            avatar: userData.avatar ,
           };
 
           localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("role", userData.role);
 
+        
+
           toast.success("Login successful!");
+
+          if(userData.role === "passenger"){
+            navigate("/phome");
+
+          }else{
+            navigate("/vhome");
+          }
           console.log("User data from Firestore:", userData);
           console.log("Logging in as role:", userData.role);
-
-          handleRole(userData.role as UserRole);
+setUser(user)
+       
         });
       })
-      .catch((error) => toast.error("Login failed: " + error.message));
+      .catch((error) => {
+        toast.error("login failed" + error.message);
+      });
   };
 
   return (
@@ -84,7 +102,7 @@ function Login() {
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gradient-to-r from-cyan-900 via-cyan-500 px-6 py-12">
         <img
           className="mx-auto h-20 w-auto rounded-full mt-4"
-          src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567816/ir75iiaon8f6sqjmcqi1.jpg"
+          src={logo}
           alt="logo"
         />
 
@@ -100,31 +118,39 @@ function Login() {
             method="POST"
           >
             <div>
-              <label className="block text-sm font-medium text-white">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-white"
+              >
                 Email address
               </label>
               <input
+                id="email"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                autoComplete="email"
+                
                 required
                 className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-white"
+              >
                 Password
               </label>
               <div className="relative">
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
-                  name="Password"
-                  value={formData.Password}
+                  name="password"
+                  value={formData.password}
                   onChange={handleChange}
-                  autoComplete="current-password"
+               
                   required
                   className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm"
                 />
@@ -155,7 +181,7 @@ function Login() {
                   value="passenger"
                   checked={formData.role === "passenger"}
                   onChange={handleChange}
-                  className="mr-2 w-5 h-5"
+                  className="mr-2 w-5 h-5 hover:cursor-pointer"
                 />
                 Passenger
               </label>
@@ -166,7 +192,7 @@ function Login() {
                   checked={formData.role === "vowner"}
                   onChange={handleChange}
                   value="vowner"
-                  className="mr-2 w-5 h-5"
+                  className="mr-2 w-5 h-5 hover:cursor-pointer"
                 />
                 Vehicle Owner
               </label>
@@ -190,7 +216,7 @@ function Login() {
 
       <div
         className="hidden md:block md:w-1/2 bg-cover bg-center  object-cover"
-        style={{ backgroundImage: "url('https://res.cloudinary.com/dq5buemig/image/upload/v1751567752/lm0rx7a89oa65w7gmz0m.avif')" }}
+        style={{ backgroundImage: `url(${bg1})` }}
       ></div>
 
       <ToastContainer />

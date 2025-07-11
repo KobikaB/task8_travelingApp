@@ -2,23 +2,30 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { auth, db } from "@/firebase/config";
 
 import { useNavigate, useParams } from "react-router";
-import { addDoc, collection, doc, getDoc, serverTimestamp } from "firebase/firestore";
-import type { PassengerFormData } from "@/types/Typescript";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 import { toast, ToastContainer } from "react-toastify";
+import type { Booking, VehiclesData } from "@/types/Typescript";
 
 function PassengerForm() {
   const { vehicleId } = useParams();
   const navigate = useNavigate();
-  const [vehicleInfo, setVehicleInfo] = useState<PassengerFormData | null>(
+  const [vehicleInfo, setVehicleInfo] = useState<VehiclesData | null>(
     null
   );
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Booking>({
     pickupLocation: "",
     dropLocation: "",
     pickupDate: "",
     pickupTime: "",
-    numberofPassengers: 1,
+    numberofPassengers: undefined,
   });
 
   useEffect(() => {
@@ -30,7 +37,7 @@ function PassengerForm() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setVehicleInfo(docSnap.data() as PassengerFormData);
+          setVehicleInfo(docSnap.data() as VehiclesData) ;
         } else {
           toast.error("Vehicle not found");
         }
@@ -66,14 +73,12 @@ function PassengerForm() {
         pickupDate: formData.pickupDate,
         pickupTime: formData.pickupTime,
         numberofPassengers: formData.numberofPassengers,
-        passengerName: user.displayName,
         createdAt: serverTimestamp(),
       });
 
       toast.success("Successfully Book");
-     
-        navigate("/phome");
-     
+
+      navigate("/phome");
     } catch (error) {
       toast.error("Booking failed");
     }
@@ -151,7 +156,7 @@ function PassengerForm() {
           <div className="flex justify-center mt-5">
             <button
               type="submit"
-              className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded  "
+              className="bg-indigo-400 hover:bg-indigo-700 text-white py-2 px-4 rounded hover:cursor-pointer "
             >
               Add Booking
             </button>

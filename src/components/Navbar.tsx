@@ -1,27 +1,26 @@
-import React from "react";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 
+import { useAuth } from "@/contexts/AuthProvider";
+
 const Navbar = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    navigate("/login");
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
   };
 
   const handleLogoClick = () => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    if(user.role === "vowner"){
+    const user = JSON.parse(localStorage.getItem("user")!);
+    if (user.role === "vowner") {
       navigate("/vhome");
-    }else if(user.role === "passenger"){
-      navigate("/phome")
-    }else{
-      navigate("/login")
+    } else if (user.role === "passenger") {
+      navigate("/phome");
     }
-  }
+  };
 
   return (
     <div className=" bg-gradient-to-r from-cyan-400/50 via-blue-900 h-20 fixed top-0 w-screen z-50 ">

@@ -2,20 +2,10 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useNavigate } from "react-router";
-
-interface Vehicle {
-  id: string;
-  name: string;
-  fees: number;
-  seats: number;
-  images: string[];
-  available: boolean;
-  type: string;
-}
+import type { VehiclesData } from "@/types/Typescript";
 
 const AllAvailableVehicles = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-
+  const [vehicles, setVehicles] = useState<VehiclesData[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +15,7 @@ const AllAvailableVehicles = () => {
         const snapshot = await getDocs(vehicleCollection);
         const vehicleList = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...(doc.data() as Omit<Vehicle, "id">),
+          ...(doc.data() as Omit<VehiclesData, "id">),
         }));
 
         console.log("Fetched vehicles:", vehicleList);
@@ -51,13 +41,13 @@ const AllAvailableVehicles = () => {
             onClick={() => navigate(`/passenger/book/${vehicle.id}`)}
             className="w-80 bg-white  rounded-lg shadow-xl hover:cursor-pointer transform transition duration-400 hover:scale-105  flex flex-col items-center  p-4 "
           >
-            <div className="mb-5" >
+            <div className="mb-5">
               <p>Name: {vehicle.type}</p>
               <p>Seats: {vehicle.seats}</p>
               <p>Fees: Rs.{vehicle.fees}</p>
             </div>
 
-            <div >
+            <div>
               {vehicle.images && vehicle.images.length > 0 ? (
                 vehicle.images.map((img, idx) => (
                   <img

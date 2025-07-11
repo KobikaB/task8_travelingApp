@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { db, auth } from "@/firebase/config";
-import { collection, query, where, getDocs} from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import type { Booking } from "@/types/Typescript";
 
 function Ptable() {
@@ -25,10 +25,11 @@ function Ptable() {
           });
 
           list.sort((a, b) => {
-  const dateTimeA = new Date(`${a.pickupDate}T${a.pickupTime}`);
-  const dateTimeB = new Date(`${b.pickupDate}T${b.pickupTime}`);
-  return dateTimeA.getTime() - dateTimeB.getTime();
-});
+            const dateTimeA = new Date(`${a.pickupDate}T${a.pickupTime}`);
+            const dateTimeB = new Date(`${b.pickupDate}T${b.pickupTime}`);
+            return dateTimeA.getTime() - dateTimeB.getTime();
+          });
+          console.log(list);
 
           setBookings(list);
         } catch (error) {
@@ -41,14 +42,16 @@ function Ptable() {
     fetchBookings();
   }, []);
 
-  if(loading){
-   return <p className="text-center text-2xl text-emerald-500">Loading datas.....</p>
+  if (loading) {
+    return (
+      <p className="text-center text-2xl text-emerald-500">
+        Loading datas.....
+      </p>
+    );
   }
 
-  
-
   return (
-    <div className="w-full h-full rounded-xl shadow-md ">
+    <div className="w-full h-full rounded-xl shadow-lg ">
       <table className="w-full text-left table-auto min-w-max bg-blue-400 ">
         <thead className=" bg-cyan-600 ">
           <tr>
@@ -77,7 +80,7 @@ function Ptable() {
           ) : (
             <tr>
               <td
-                colSpan={8}
+                colSpan={6}
                 className="text-center px-4 py-6 bg-white text-xl text-gray-600"
               >
                 No bookings found

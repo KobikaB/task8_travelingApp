@@ -1,7 +1,7 @@
 export interface FormData {
   email: string;
-  Password:  string;
-  role:"passenger" | "vowner" | "";
+  password: string;
+  role: "passenger" | "vowner" | "";
 }
 export type UserRole = "passenger" | "vowner" | "";
 
@@ -24,67 +24,54 @@ export interface RegisterPage {
   role: string;
 }
 
-
 export interface Booking {
-  id: string;
+  id?: string;
   pickupLocation: string;
   dropLocation: string;
   pickupDate: string;
   pickupTime: string;
-  numberofPassengers: number;
-  vehicleId: string;
+  numberofPassengers: number | undefined;
+  vehicleId?: string;
 }
 
 
 
-export interface  PassengerFormData {
-  name: string;
-  fees: number;
-  seats: number;
+export interface VehiclesData {
+  id?: string;
+  model: string;
+  seats: number | undefined;
+  type: string;
+  licensePlate: string;
+  fees: number | undefined;
   available: boolean;
-  images: string[];
-  type:string,
+  images?: string[];
+  name?: string;
 }
 
-
-export interface vehicleFormData {
-  model:string,
-  seats:number | undefined,
-  type:string,
-  licensePlate:string,
-  fees:number|undefined,
-  available:false
-
+export interface profileData {
+  Fname: string;
+  Lname: string;
+  email: string;
+  avatar: string;
+  role: "passenger" | "vowner";
+  uid: string;
 }
 
-
-export interface Vehicles{
-  id:string,
-  model:string,
-  seats:number,
-  type:string,
-  licensePlate:string,
-  fees:number,
-  available:boolean,
-  images? : string[],
+export interface cloudinaryData {
+  cloudName: string;
+  uploadPreset: string;
+  folder?: string;
+  apiKey: string;
 }
 
+// export interface AuthContextType {
+//   user: User | null;
+//   logout: () => void;
+// }
 
-export interface Vehicle {
-  id: string;       
-  name: string;
-  fees: number;
-  seats: number;
+// export interface User {
+//   uid: string;
+//   role: "passenger" | "vowner";
   
-  available: boolean;
-}
-
-export interface profileData{
-    Fname:string,
-        Lname:string,
-        email:string,
-        avatar:string,
-        role:"passenger" | "vowner",
-        uid:string,
-}
+// }
 

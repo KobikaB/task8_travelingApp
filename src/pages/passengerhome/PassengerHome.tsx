@@ -31,9 +31,9 @@ function PassengerHome() {
   
 
   return (
-    <div className="relative w-full min-h-screen bg-gray-100">
+    <div className="relative w-full min-h-screen">
       <img
-        src="https://res.cloudinary.com/dq5buemig/image/upload/v1751567755/no4gj5peshgbrmyyzzns.png"
+        src="https://res.cloudinary.com/dq5buemig/image/upload/v1751657517/lmrr3prv7zqgswdibx01.webp"
         alt="bgI"
         className="absolute inset-0 w-full h-full object-cover z-0"
       />

@@ -9,6 +9,7 @@ const uploadImageToCloudinary = async (
   formData.append("file", file);
   formData.append("upload_preset", cloudinary.uploadPreset);
   formData.append("folder", folder);
+  
 
   const res = await axios.post(
     `https://api.cloudinary.com/v1_1/${cloudinary.cloudName}/image/upload`,

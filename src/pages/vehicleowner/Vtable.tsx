@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 
 import { db } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import type { Vehicles } from "@/types/Typescript";
+import type { VehiclesData } from "@/types/Typescript";
+
 
 function Vtable() {
-  const [vehicles, setVehicles] = useState<Vehicles[]>([]);
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicles | null>(null);
+  const [vehicles, setVehicles] = useState<VehiclesData[]>([]);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehiclesData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -21,10 +22,12 @@ function Vtable() {
 
         try {
           const snapshot = await getDocs(q);
-          const list: Vehicles[] = [];
+          const list: VehiclesData[] = [];
           snapshot.forEach((doc) => {
-            list.push({ id: doc.id, ...doc.data() } as Vehicles);
+            list.push({ id: doc.id, ...doc.data() } as VehiclesData);
+               
           });
+       
 
           setVehicles(list);
         } catch (error) {
@@ -131,7 +134,7 @@ function Vtable() {
 
       {selectedVehicle && (
         <div className=" flex justify-center items-center bg-black fixed inset-0 px-4">
-          <div className="bg-white rounded-lg max-w-xl w-full p-6 relative shadow-lg mt-20 ">
+          <div className="bg-white rounded-lg max-w-xl w-full p-6 relative shadow-lg mt-20  ">
             <button
               onClick={() => setSelectedVehicle(null)}
               className="absolute top-0 right-1 text-blue-900 hover:text-red-600 text-xl font-bold "
